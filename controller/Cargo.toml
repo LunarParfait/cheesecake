@@ -1,0 +1,14 @@
+[package]
+name = "controller"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+path = "lib.rs"
+
+[dependencies]
+anyhow = "1.0.97"
+axum = "0.8.1"
+tower = { version = "0.5.2", features = ["balance", "limit", "load-shed", "timeout"] }
+tower-http = { version = "0.6.2", features = ["timeout", "trace"] }
+model = { path = "../model" }

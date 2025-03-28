@@ -1,0 +1,12 @@
+[package]
+name = "model"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+path = "lib.rs"
+
+[dependencies]
+anyhow = "1.0.97"
+axum = "0.8.1"
+sqlx-sqlite = "0.8.3"
