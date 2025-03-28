@@ -1,0 +1,12 @@
+[package]
+name = "database"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+path = "lib.rs"
+
+[dependencies]
+axum = "0.8.1"
+sqlx = { version = "0.8.3", features = ["runtime-tokio", "sqlite"] }
+thiserror = "2.0.12"

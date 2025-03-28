@@ -1,0 +1,20 @@
+{# base #}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  {% if env_is_dev %}
+  <script src="https://cdn.tailwindcss.com"></script>
+  {% else %}
+  <link href="/public/tailwind.css" rel="stylesheet">
+  {% endif %}
+
+  {% block head %}{% endblock head %}
+</head>
+
+<body class="bg-gray-200">
+  {% block body %}{% endblock body %}
+</body>
+
+</html>
