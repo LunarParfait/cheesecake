@@ -1,13 +1,12 @@
-use std::sync::Arc;
+use axum::Router;
 use axum::response::IntoResponse;
 use axum::routing::get;
-use axum::Router;
-use model::app_error::AppResult;
-use model::app_state::AppState;
+use std::sync::Arc;
+use types::app_error::AppResult;
+use types::app_state::AppState;
 
 pub fn router() -> Router<Arc<AppState>> {
-    Router::new()
-        .route("/", get(index))
+    Router::new().route("/", get(index))
 }
 
 async fn index() -> AppResult<impl IntoResponse> {
