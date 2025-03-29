@@ -8,7 +8,7 @@ use serde::Serialize;
 use std::sync::RwLock;
 use tera::Tera;
 
-pub mod core;
+pub mod root;
 
 #[cfg(debug_assertions)]
 static TERA: LazyLock<RwLock<Tera>> = LazyLock::new(|| {

@@ -5,4 +5,8 @@
 
 {% block body %}
 <h1 id="index-h1">Hello from Index!</h1>
+<h2>Users: </h2>
+{% for user in users %}
+<div>{{user.id}} : {{user.name}}</div>
+{% endfor %}
 {% endblock body %}

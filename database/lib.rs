@@ -17,5 +17,5 @@ pub async fn init_sqlite(conn_str: &str) -> Result<DatabaseConnection, DbErr> {
 }
 
 pub async fn migrate(db: &DatabaseConnection) -> Result<(), DbErr> {
-    Migrator::refresh(db).await
+    Migrator::up(db, None).await
 }
