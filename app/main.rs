@@ -1,4 +1,4 @@
-use model::app_state::AppState;
+use types::app_state::AppState;
 use std::sync::Arc;
 use tokio::signal;
 use tracing::info;
@@ -8,6 +8,7 @@ async fn main() {
     let args: Vec<String> = std::env::args().collect();
 
     dotenvy::dotenv().unwrap();
+    dotenvy::from_filename_override(".env.local").unwrap();
     tracing_subscriber::fmt::init();
 
     info!("Logging initialized");

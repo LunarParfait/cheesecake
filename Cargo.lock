@@ -128,10 +128,10 @@ dependencies = [
  "controller",
  "database",
  "dotenvy",
- "model",
  "tokio",
  "tracing",
  "tracing-subscriber",
+ "types",
  "view",
 ]
 
@@ -516,9 +516,9 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "axum",
- "model",
  "tower",
  "tower-http",
+ "types",
  "view",
 ]
 
@@ -1578,15 +1578,6 @@ dependencies = [
  "libc",
  "wasi 0.11.0+wasi-snapshot-preview1",
  "windows-sys 0.52.0",
-]
-
-[[package]]
-name = "model"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "axum",
- "sea-orm",
 ]
 
 [[package]]
@@ -3217,6 +3208,15 @@ name = "typenum"
 version = "1.18.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1dccffe3ce07af9386bfd29e80c0ab1a8205a2fc34e4bcd40364df902cfa8f3f"
+
+[[package]]
+name = "types"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "axum",
+ "sea-orm",
+]
 
 [[package]]
 name = "ucd-trie"
