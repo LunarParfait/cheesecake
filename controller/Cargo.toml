@@ -10,5 +10,6 @@ path = "lib.rs"
 anyhow = "1.0.97"
 axum = "0.8.1"
 tower = { version = "0.5.2", features = ["balance", "limit", "load-shed", "timeout"] }
-tower-http = { version = "0.6.2", features = ["timeout", "trace"] }
+tower-http = { version = "0.6.2", features = ["fs", "timeout", "trace"] }
 model = { path = "../model" }
+view = { path = "../view" }

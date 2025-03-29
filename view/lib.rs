@@ -1,5 +1,6 @@
 use std::convert::identity;
 use std::sync::LazyLock;
+use axum::response::Html;
 #[cfg(debug_assertions)]
 use hotwatch::{Event, EventKind, Hotwatch};
 use minify_html::Cfg;
@@ -19,6 +20,8 @@ macro_rules! templates_dir {
 static MINIFY_CONFIG: LazyLock<Cfg> = LazyLock::new(|| {
     let mut cfg = Cfg::new();
     cfg.minify_doctype = false;
+    cfg.keep_closing_tags = true;
+    cfg.keep_html_and_head_opening_tags = true;
     cfg.minify_js = true;
     cfg.minify_css = true;
     cfg.keep_comments = false;
@@ -42,7 +45,7 @@ static TERA: LazyLock<Tera> = LazyLock::new(|| {
 static HOTWATCH: LazyLock<Hotwatch> = LazyLock::new(|| {
     use std::time::Duration;
     let mut hotwatch =
-        Hotwatch::new_with_custom_delay(Duration::new(1, 0)).unwrap();
+        Hotwatch::new_with_custom_delay(Duration::new(0, 300000000)).unwrap();
     hotwatch
         .watch(templates_dir!(), |event: Event| {
             match event.kind {
@@ -68,7 +71,7 @@ pub enum RenderError {
     Serde(serde_json::Error),
 }
 
-pub type RenderResult = Result<Vec<u8>, RenderError>;
+pub type RenderResult = Result<Html<Vec<u8>>, RenderError>;
 
 pub trait AppTemplate: Serialize + Default {
     /// Renders the template with given path/name
@@ -117,5 +120,6 @@ impl<T: Serialize + Default> AppTemplate for T {
             .map_or_else(|_| tera::Context::new(), identity);
 
         render_internal(path, ctx).map_err(RenderError::Tera)
+            .map(Html)
     }
 }

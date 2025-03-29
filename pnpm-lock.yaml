@@ -1,0 +1,34 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+
+  .:
+    dependencies:
+      uglify-js:
+        specifier: ^3.19.3
+        version: 3.19.3
+      uglifycss:
+        specifier: ^0.0.29
+        version: 0.0.29
+
+packages:
+
+  uglify-js@3.19.3:
+    resolution: {integrity: sha512-v3Xu+yuwBXisp6QYTcH4UbH+xYJXqnq2m/LtQVWKWzYc1iehYnLixoQDN9FH6/j9/oybfd6W9Ghwkl8+UMKTKQ==}
+    engines: {node: '>=0.8.0'}
+    hasBin: true
+
+  uglifycss@0.0.29:
+    resolution: {integrity: sha512-J2SQ2QLjiknNGbNdScaNZsXgmMGI0kYNrXaDlr4obnPW9ni1jljb1NeEVWAiTgZ8z+EBWP2ozfT9vpy03rjlMQ==}
+    engines: {node: '>=6.4.0'}
+    hasBin: true
+
+snapshots:
+
+  uglify-js@3.19.3: {}
+
+  uglifycss@0.0.29: {}
