@@ -1,24 +1,43 @@
-use std::sync::Arc;
+use clap::Parser;
 use model::app_state::AppState;
+use std::sync::Arc;
 use tokio::signal;
 use tracing::info;
 
+#[derive(Parser, Debug)]
+struct Args {
+    #[arg(short, long, default_value_t = false)]
+    migrate_only: bool,
+}
+
 #[tokio::main]
 async fn main() {
+    let args = Args::parse();
+
     dotenvy::dotenv().unwrap();
     tracing_subscriber::fmt::init();
 
+    info!("Logging initialized");
+
     let db_str = dotenvy::var("DATABASE_URL").unwrap();
-    let mig_dir = dotenvy::var("MIGRATIONS_DIR").unwrap();
 
     let pool = database::init_sqlite(&db_str).await.unwrap();
-    let max_connections = pool.options().get_max_connections();
+    let max_connections = pool
+        .get_sqlite_connection_pool()
+        .options()
+        .get_max_connections();
+
     info!(
         "Initialized SQLite pool with {:?} max connections",
         max_connections
     );
 
-    database::migrate(&pool, &mig_dir).await.unwrap();
+    database::migrate(&pool).await.unwrap();
+
+    if args.migrate_only {
+        info!("Migration cuccessful");
+        return;
+    }
 
     #[cfg(debug_assertions)]
     view::setup_hotwatch();

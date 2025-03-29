@@ -3,7 +3,6 @@ use std::sync::LazyLock;
 use axum::response::Html;
 #[cfg(debug_assertions)]
 use hotwatch::{Event, EventKind, Hotwatch};
-use minify_html::Cfg;
 use serde::Serialize;
 #[cfg(debug_assertions)]
 use std::sync::RwLock;
@@ -16,18 +15,6 @@ macro_rules! templates_dir {
         concat!(env!("CARGO_MANIFEST_DIR"), "/templates")
     };
 }
-
-static MINIFY_CONFIG: LazyLock<Cfg> = LazyLock::new(|| {
-    let mut cfg = Cfg::new();
-    cfg.minify_doctype = false;
-    cfg.keep_closing_tags = true;
-    cfg.keep_html_and_head_opening_tags = true;
-    cfg.minify_js = true;
-    cfg.minify_css = true;
-    cfg.keep_comments = false;
-
-    cfg
-});
 
 #[cfg(debug_assertions)]
 static TERA: LazyLock<RwLock<Tera>> = LazyLock::new(|| {
@@ -71,7 +58,7 @@ pub enum RenderError {
     Serde(serde_json::Error),
 }
 
-pub type RenderResult = Result<Html<Vec<u8>>, RenderError>;
+pub type RenderResult = Result<Html<String>, RenderError>;
 
 pub trait AppTemplate: Serialize + Default {
     /// Renders the template with given path/name
@@ -87,29 +74,23 @@ pub trait AppTemplate: Serialize + Default {
 fn render_internal(
     path: &'static str,
     mut ctx: tera::Context,
-) -> Result<Vec<u8>, tera::Error> {
-    use minify_html::minify;
-
+) -> Result<String, tera::Error> {
     ctx.insert("env_is_dev", &true);
     let mteradev = TERA.read().unwrap();
     let raw = mteradev.render(path, &ctx)?;
-    let minified = minify(raw.as_bytes(), &MINIFY_CONFIG);
 
-    Ok(minified)
+    Ok(raw)
 }
 
 #[cfg(not(debug_assertions))]
 fn render_internal(
     path: &'static str,
     mut ctx: tera::Context,
-) -> Result<Vec<u8>, tera::Error> {
-    use minify_html::minify;
-
+) -> Result<String, tera::Error> {
     ctx.insert("env_is_dev", &false);
     let raw = TERA.render(path, &ctx)?;
-    let minified = minify(raw.as_bytes(), &MINIFY_CONFIG);
 
-    Ok(minified)
+    Ok(raw)
 }
 
 impl<T: Serialize + Default> AppTemplate for T {
