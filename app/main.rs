@@ -1,18 +1,11 @@
-use clap::Parser;
 use model::app_state::AppState;
 use std::sync::Arc;
 use tokio::signal;
 use tracing::info;
 
-#[derive(Parser, Debug)]
-struct Args {
-    #[arg(short, long, default_value_t = false)]
-    migrate_only: bool,
-}
-
 #[tokio::main]
 async fn main() {
-    let args = Args::parse();
+    let args: Vec<String> = std::env::args().collect();
 
     dotenvy::dotenv().unwrap();
     tracing_subscriber::fmt::init();
@@ -34,7 +27,7 @@ async fn main() {
 
     database::migrate(&pool).await.unwrap();
 
-    if args.migrate_only {
+    if args.contains(&"--migrate-only".to_string()) {
         info!("Migration cuccessful");
         return;
     }

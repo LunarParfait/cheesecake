@@ -23,7 +23,7 @@ pub fn router(max_connections: u32) -> Router<Arc<AppState>> {
     let serve_dir = if cfg!(debug_assertions) {
         "public"
     } else {
-        "dist"
+        "dist/public"
     };
 
     Router::new()
