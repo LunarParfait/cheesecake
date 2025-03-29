@@ -6,6 +6,5 @@ hypermedia driven applications with SQLite, Axum (Rust) Shoelace, HTMX, and Alpi
 
 ### TODO
 
-- [ ] Add SeaORM support
-- [ ] Add Shoelace, HTMX and AlpineJS defaults
-- [ ] Add CLI tool
+- Add Shoelace, HTMX and AlpineJS defaults
+- Add CLI tool

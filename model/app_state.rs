@@ -1,6 +1,6 @@
-use sqlx_sqlite::SqlitePool;
+use sea_orm::DatabaseConnection;
 
 #[derive(Debug)]
 pub struct AppState {
-    pub pool: SqlitePool,
+    pub pool: DatabaseConnection,
 }
