@@ -3,14 +3,12 @@ setup:
 	# cd build_utils && bun install
 
 clean:
-	rm -r dist logs
+	rm -r dist logs || true
 	cargo clean
 
 build:
-	# rm -r dist
-	# mkdir dist
-	# cd build_utils && zsh build-assets.zsh
-	# cd build_utils && bun make-tailwind
+	rm -r dist || true
+	mkdir dist dist/public dist/templates
 	node build-assets.js
 	cargo build -p app --release
 

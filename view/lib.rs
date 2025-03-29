@@ -10,22 +10,16 @@ use tera::Tera;
 
 pub mod core;
 
-macro_rules! templates_dir {
-    () => {
-        concat!(env!("CARGO_MANIFEST_DIR"), "/templates")
-    };
-}
-
 #[cfg(debug_assertions)]
 static TERA: LazyLock<RwLock<Tera>> = LazyLock::new(|| {
-    Tera::new(concat!(templates_dir!(), "**/*.html"))
+    Tera::new(concat!("view/templates", "**/*.html"))
         .unwrap()
         .into()
 });
 
 #[cfg(not(debug_assertions))]
 static TERA: LazyLock<Tera> = LazyLock::new(|| {
-    Tera::new(concat!(templates_dir!(), "**/*.html")).unwrap()
+    Tera::new(concat!("dist/templates", "**/*.html")).unwrap()
 });
 
 #[cfg(debug_assertions)]
@@ -34,7 +28,7 @@ static HOTWATCH: LazyLock<Hotwatch> = LazyLock::new(|| {
     let mut hotwatch =
         Hotwatch::new_with_custom_delay(Duration::new(0, 300000000)).unwrap();
     hotwatch
-        .watch(templates_dir!(), |event: Event| {
+        .watch("view/templates", |event: Event| {
             match event.kind {
                 EventKind::Any | EventKind::Other => (),
                 _ => drop(TERA.write().unwrap().full_reload()),
