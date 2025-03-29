@@ -30,7 +30,7 @@ lint-prod:
 	cargo clippy --release
 
 dev:
-	RUST_SPANTRACE=1 RUST_BACKTRACE=full RUST_LIB_BACKTRACE=1 cargo run -p app
+	RUST_BACKTRACE=full cargo run -p app
 
 prod: build
 	cargo run -p app --release

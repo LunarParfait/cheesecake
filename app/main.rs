@@ -5,12 +5,16 @@ use tokio::signal;
 use tracing::{debug, info, warn};
 use types::app_state::AppState;
 
+use self::logging::init_logging;
+
+mod logging;
+
 #[tokio::main]
 async fn main() {
     let args: Vec<String> = std::env::args().collect();
     ENV.init();
 
-    tracing_subscriber::fmt::init();
+    init_logging().await;
 
     info!("Logging initialized");
 
@@ -46,8 +50,8 @@ async fn main() {
     info!("Listening on {}", listener.local_addr().unwrap());
     axum::serve(listener, app)
         .with_graceful_shutdown(async {
-            before_axum();
             shutdown_signal().await;
+            before_axum();
         })
         .await
         .unwrap();

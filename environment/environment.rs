@@ -1,15 +1,15 @@
 use std::net::{IpAddr, Ipv4Addr};
+use std::path::PathBuf;
+use tracing::level_filters::LevelFilter;
 
-use tracing::Level;
-
-use crate::{owned_var_or, var, var_or, EnvLock};
+use crate::{EnvLock, owned_var_or, var, var_or};
 
 pub struct Environment {
     pub hostname: IpAddr,
     pub port: u16,
     pub domain: &'static str,
-    pub log_severity: tracing::Level,
-    pub log_directory: &'static str,
+    pub log_level: LevelFilter,
+    pub log_directory: PathBuf,
     pub database_url: &'static str,
     pub db_conn_max: u16,
 }
@@ -24,15 +24,13 @@ impl Environment {
             hostname: owned_var_or("HOSTNAME", IpAddr::V4(Ipv4Addr::LOCALHOST)),
             port: owned_var_or("PORT", 3000),
             domain: var_or::<String, _>("DOMAIN", "localhost"),
-            log_severity: match var_or::<String, _>("LOG_LEVEL", "INFO") {
-                "TRACE" => Level::TRACE,
-                "DEBUG" => Level::DEBUG,
-                "INFO" => Level::INFO,
-                "WARN" => Level::WARN,
-                "ERROR" => Level::ERROR,
-                _ => panic!("Invalid LOG_LEVEL"),
-            },
-            log_directory: var_or::<String, _>("LOG_DIRECTORY", "logs/"),
+            log_level: var_or::<String, _>("LOG_LEVEL", "INFO")
+                .parse::<LevelFilter>()
+                .unwrap(),
+            log_directory: owned_var_or(
+                "LOG_DIRECTORY",
+                PathBuf::from("./logs"),
+            ),
             database_url: var::<String, _>("DATABASE_URL"),
             db_conn_max: owned_var_or("DB_CONN_MAX", 10),
         }
