@@ -20,6 +20,9 @@ async fn main() {
 
     database::migrate(&pool, &mig_dir).await.unwrap();
 
+    #[cfg(debug_assertions)]
+    view::setup_hotwatch();
+
     let app_state = Arc::new(AppState { pool });
     let app = controller::router(max_connections).with_state(app_state);
 

@@ -16,3 +16,4 @@ database = { path = "../database" }
 model = { path = "../model" }
 controller = { path = "../controller" }
 axum = "0.8.1"
+view = { path = "../view" }
