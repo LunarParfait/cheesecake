@@ -516,6 +516,8 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "axum",
+ "database",
+ "sea-orm",
  "tower",
  "tower-http",
  "types",
@@ -646,6 +648,7 @@ dependencies = [
  "axum",
  "sea-orm",
  "sea-orm-migration",
+ "serde",
  "thiserror 2.0.12",
 ]
 
@@ -3368,6 +3371,7 @@ name = "view"
 version = "0.1.0"
 dependencies = [
  "axum",
+ "database",
  "hotwatch",
  "serde",
  "serde_json",

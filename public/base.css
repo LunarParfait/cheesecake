@@ -5,10 +5,12 @@
 }
 
 body {
+  font-family: monospace;
   background-color: var(--background);
   color: var(--foreground);
 }
 
 #index-h1 {
+  font-size: 30px;
   color: #fa3030;
 }
