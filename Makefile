@@ -1,8 +1,10 @@
 setup:
 	cp -n .env.example .env.local
-	# cd build_utils && bun install
+	mkdir -p database/db
+	touch database/db/db.sqlite
 
 clean:
+	rm -r database/db || true
 	rm -r dist logs || true
 	cargo clean
 
@@ -36,3 +38,7 @@ prod: build
 migrate:
 	cargo run -p app -- --migrate-only
 
+generate-entities:
+	sea-orm-cli generate entity -o database/entities
+
+.PHONY: setup clean build test check check-prod lint lint-prod dev prod migrate generate-entities
