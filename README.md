@@ -1,8 +1,16 @@
 
 # Velvet
 
-This is a template with the intent to make it easier to setup
-hypermedia driven applications with SQLite, Axum (Rust) Shoelace, HTMX, and AlpineJS
+The end goal is for this to be an opinionated meta-framework for building fullstack
+hypermedia driven web applications in Rust using the SASHA stack (SQLite, Axum, Shoelace, HTMX, AlpineJS)
+
+### Dependencies
+
+- Make
+- PNPM
+- Rust 2024
+- Nodejs 23
+- SeaORM CLI
 
 ### TODO
 

@@ -1,21 +1,20 @@
-use types::app_state::AppState;
+use std::net::SocketAddr;
 use std::sync::Arc;
+use environment::ENV;
 use tokio::signal;
-use tracing::info;
+use tracing::{debug, info, warn};
+use types::app_state::AppState;
 
 #[tokio::main]
 async fn main() {
     let args: Vec<String> = std::env::args().collect();
+    ENV.init();
 
-    dotenvy::dotenv().unwrap();
-    dotenvy::from_filename_override(".env.local").unwrap();
     tracing_subscriber::fmt::init();
 
     info!("Logging initialized");
 
-    let db_str = dotenvy::var("DATABASE_URL").unwrap();
-
-    let pool = database::init_sqlite(&db_str).await.unwrap();
+    let pool = database::init_sqlite(ENV.database_url).await.unwrap();
     let max_connections = pool
         .get_sqlite_connection_pool()
         .options()
@@ -37,17 +36,32 @@ async fn main() {
     view::setup_hotwatch();
 
     let app_state = Arc::new(AppState { pool });
-    let app = controller::router(max_connections).with_state(app_state);
+    let app = controller::router(max_connections).with_state(app_state.clone());
 
-    let listener = tokio::net::TcpListener::bind("127.0.0.1:3000")
+    let sock_addr = SocketAddr::from((ENV.hostname, ENV.port));
+    let listener = tokio::net::TcpListener::bind(sock_addr)
         .await
         .unwrap();
 
     info!("Listening on {}", listener.local_addr().unwrap());
     axum::serve(listener, app)
-        .with_graceful_shutdown(shutdown_signal())
+        .with_graceful_shutdown(async {
+            before_axum();
+            shutdown_signal().await;
+        })
         .await
         .unwrap();
+    after_axum(app_state).await;
+}
+
+fn before_axum() {
+    warn!("The server is shutting down!");
+    info!("Waiting for pending requests (max. 15s)...");
+}
+
+async fn after_axum(app_state: Arc<AppState>) {
+    debug!("All pending requests have been processed!");
+    app_state.pool.close_by_ref().await.unwrap();
 }
 
 async fn shutdown_signal() {
