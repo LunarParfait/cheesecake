@@ -1,14 +1,14 @@
-use std::convert::identity;
-use std::sync::LazyLock;
 use axum::response::Html;
 #[cfg(debug_assertions)]
 use hotwatch::{Event, EventKind, Hotwatch};
 use serde::Serialize;
+use std::convert::identity;
+use std::sync::LazyLock;
 #[cfg(debug_assertions)]
 use std::sync::RwLock;
+use tera::Tera;
 #[cfg(debug_assertions)]
 use tokio::sync::watch;
-use tera::Tera;
 
 pub mod root;
 
@@ -64,7 +64,7 @@ pub enum RenderError {
     Serde(serde_json::Error),
 }
 
-pub type RenderResult = Result<Html<String>, RenderError>;
+pub type RenderResult = Result<Html<String>, anyhow::Error>;
 
 pub trait AppTemplate: Serialize + Default {
     /// Renders the template with given path/name
@@ -80,7 +80,7 @@ pub trait AppTemplate: Serialize + Default {
 fn render_internal(
     path: &'static str,
     mut ctx: tera::Context,
-) -> Result<String, tera::Error> {
+) -> anyhow::Result<String> {
     ctx.insert("env_is_dev", &true);
     let mteradev = TERA.read().unwrap();
     let raw = mteradev.render(path, &ctx)?;
@@ -92,7 +92,7 @@ fn render_internal(
 fn render_internal(
     path: &'static str,
     mut ctx: tera::Context,
-) -> Result<String, tera::Error> {
+) -> anyhow::Result<String> {
     ctx.insert("env_is_dev", &false);
     let raw = TERA.render(path, &ctx)?;
 
@@ -106,7 +106,6 @@ impl<T: Serialize + Default> AppTemplate for T {
         let ctx = tera::Context::from_value(ctx_json)
             .map_or_else(|_| tera::Context::new(), identity);
 
-        render_internal(path, ctx).map_err(RenderError::Tera)
-            .map(Html)
+        render_internal(path, ctx).map(Html)
     }
 }
