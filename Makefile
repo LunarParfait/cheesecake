@@ -31,10 +31,10 @@ lint-prod:
 	cargo clippy --release
 
 dev:
-	RUST_BACKTRACE=1 cargo run -p app
+	LOG_LEVEL=DEBUG RUST_BACKTRACE=1 cargo run -p app
 
 prod: build
-	cargo run -p app --release
+	RUST_BACKTRACE=1 cargo run -p app --release
 
 migrate:
 	cargo run -p app -- --migrate-only

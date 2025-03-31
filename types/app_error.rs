@@ -2,6 +2,7 @@ use std::fmt::Display;
 
 use axum::http::StatusCode;
 use axum::response::{IntoResponse, Response};
+use tracing::error;
 
 fn cut_trace(trace: &str) -> &str {
     trace
@@ -22,14 +23,16 @@ impl Display for AppError {
         let source = &self.0;
         let backtrace = source.backtrace().to_string();
         let backtrace = cut_trace(backtrace.as_str());
-        write!(f, "INTERNAL SERVER ERROR: {source}. \n{backtrace}")
+        write!(f, "{source}. \n{backtrace}")
     }
 }
 
 // Tell axum how to convert `AppError` into a response.
 impl IntoResponse for AppError {
     fn into_response(self) -> Response {
-        (StatusCode::INTERNAL_SERVER_ERROR, self.to_string()).into_response()
+        error!("{}", self.to_string());
+        (StatusCode::INTERNAL_SERVER_ERROR, "Internal Server Error")
+            .into_response()
     }
 }
 
