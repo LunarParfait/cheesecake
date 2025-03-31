@@ -32,6 +32,9 @@ const minifyOpts = {
   removeComments: true,
   removeRedundantAttributes: true,
   removeEmptyAttributes: true,
+  collapseWhitespace: true,
+  conservativeCollapse: true,
+  useShortDoctype: true,
   minifyCSS: true,
   minifyJS: true,
 }
