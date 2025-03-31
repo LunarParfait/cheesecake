@@ -7,6 +7,7 @@ use axum::extract::ws::WebSocket;
 use axum::extract::ws::WebSocketUpgrade;
 use axum::http::StatusCode;
 use axum::response::{IntoResponse, Response};
+#[cfg(debug_assertions)]
 use axum::routing::any;
 use axum::routing::get;
 use axum::{BoxError, Router};
@@ -55,7 +56,7 @@ async fn ping() -> impl IntoResponse {
 #[cfg(debug_assertions)]
 async fn dev_server(ws: WebSocketUpgrade) -> impl IntoResponse {
 
-    ws.on_upgrade(move |socket| dev_socket(socket))
+    ws.on_upgrade(dev_socket)
 }
 
 #[cfg(debug_assertions)]

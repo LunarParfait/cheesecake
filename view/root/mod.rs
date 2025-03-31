@@ -1,5 +1,5 @@
+use super::AppTemplate;
 use crate::RenderResult;
-use anyhow::bail;
 use database::entities::user;
 use serde::Serialize;
 
@@ -9,5 +9,5 @@ struct Template {
 }
 
 pub fn render(users: Vec<user::Model>) -> RenderResult {
-    bail!("meow")
+    Template { users }.render("index.html")
 }
