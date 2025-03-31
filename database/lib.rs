@@ -1,11 +1,10 @@
-use sea_orm::{Database, DatabaseConnection, DbErr};
+use sea_orm::{ConnectOptions, Database, DatabaseConnection, DbErr};
 use sea_orm_migration::prelude::*;
 
 use self::migrator::Migrator;
 
 mod migrator;
 pub mod entities;
-pub mod repos;
 
 #[cfg(test)]
 pub async fn init_memdb() -> Result<DatabaseConnection, DbErr> {
@@ -13,7 +12,12 @@ pub async fn init_memdb() -> Result<DatabaseConnection, DbErr> {
 }
 
 pub async fn init_sqlite(conn_str: &str) -> Result<DatabaseConnection, DbErr> {
-    Database::connect(conn_str).await
+    let mut opt = ConnectOptions::new(conn_str);
+    opt.max_connections(10)
+        .sqlx_logging(false)
+        .min_connections(10);
+
+    Database::connect(opt).await
 }
 
 pub async fn migrate(db: &DatabaseConnection) -> Result<(), DbErr> {

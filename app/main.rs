@@ -2,7 +2,7 @@ use std::net::SocketAddr;
 use std::sync::Arc;
 use environment::ENV;
 use tokio::signal;
-use tracing::{debug, info, warn};
+use tracing::{info, warn};
 use types::app_state::AppState;
 
 use self::logging::init_logging;
@@ -64,7 +64,7 @@ fn before_axum() {
 }
 
 async fn after_axum(app_state: Arc<AppState>) {
-    debug!("All pending requests have been processed!");
+    info!("All pending requests have been processed!");
     app_state.pool.close_by_ref().await.unwrap();
 }
 
