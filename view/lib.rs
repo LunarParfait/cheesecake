@@ -6,6 +6,8 @@ use hotwatch::{Event, EventKind, Hotwatch};
 use serde::Serialize;
 #[cfg(debug_assertions)]
 use std::sync::RwLock;
+#[cfg(debug_assertions)]
+use tokio::sync::watch;
 use tera::Tera;
 
 pub mod root;
@@ -23,15 +25,25 @@ static TERA: LazyLock<Tera> = LazyLock::new(|| {
 });
 
 #[cfg(debug_assertions)]
+pub static HOTWATCH_CHANNEL: LazyLock<(
+    watch::Sender<()>,
+    watch::Receiver<()>,
+)> = LazyLock::new(|| watch::channel(()));
+
+#[cfg(debug_assertions)]
 static HOTWATCH: LazyLock<Hotwatch> = LazyLock::new(|| {
     use std::time::Duration;
+
     let mut hotwatch =
         Hotwatch::new_with_custom_delay(Duration::new(0, 300000000)).unwrap();
     hotwatch
         .watch("view/templates", |event: Event| {
             match event.kind {
                 EventKind::Any | EventKind::Other => (),
-                _ => drop(TERA.write().unwrap().full_reload()),
+                _ => {
+                    HOTWATCH_CHANNEL.0.send(()).unwrap();
+                    TERA.write().unwrap().full_reload().unwrap();
+                }
             };
         })
         .unwrap();
