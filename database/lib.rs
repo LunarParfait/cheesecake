@@ -5,7 +5,6 @@ use self::migrator::Migrator;
 
 mod migrator;
 pub mod entities;
-pub mod repos;
 
 #[cfg(test)]
 pub async fn init_memdb() -> Result<DatabaseConnection, DbErr> {
