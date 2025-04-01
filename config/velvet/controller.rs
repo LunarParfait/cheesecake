@@ -1,5 +1,5 @@
-use axum::Router;
 use crate::app::app_state::AppState;
+use axum::Router;
 
 pub trait Controller {
     fn router() -> (&'static str, Router<AppState>);

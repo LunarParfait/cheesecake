@@ -1,3 +1,5 @@
+use crate::app::app_state::AppState;
+use axum::Router;
 #[cfg(debug_assertions)]
 use axum::extract::ws::WebSocket;
 #[cfg(debug_assertions)]
@@ -6,9 +8,7 @@ use axum::extract::ws::WebSocketUpgrade;
 use axum::response::IntoResponse;
 #[cfg(debug_assertions)]
 use axum::routing::any;
-use axum::Router;
 use tower_http::services::ServeDir;
-use crate::app::app_state::AppState;
 
 pub fn router(app_state: AppState) -> Router<AppState> {
     let serve_dir = if cfg!(debug_assertions) {
@@ -22,8 +22,7 @@ pub fn router(app_state: AppState) -> Router<AppState> {
     #[cfg(debug_assertions)]
     let router = router.route("/dev-server", any(dev_server));
 
-    router
-        .nest_service("/static", ServeDir::new(serve_dir))
+    router.nest_service("/static", ServeDir::new(serve_dir))
 }
 
 #[cfg(debug_assertions)]

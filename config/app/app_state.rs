@@ -1,8 +1,8 @@
+use crate::velvet::app_state::AppStateFactoryTrait;
+use crate::velvet::env::BASE_ENV;
 use async_trait::async_trait;
 use sea_orm::{ConnectOptions, Database, DatabaseConnection};
 use std::sync::Arc;
-use crate::velvet::app_state::AppStateFactoryTrait;
-use crate::velvet::env::BASE_ENV;
 
 #[derive(Debug)]
 pub struct AppStateStruct {
