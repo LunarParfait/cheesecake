@@ -14,7 +14,7 @@ pub struct AppStateFactory;
 
 #[async_trait]
 impl AppStateFactoryTrait<AppState> for AppStateFactory {
-    async fn new() -> AppState {
+    async fn create() -> AppState {
         let mut opt = ConnectOptions::new(BASE_ENV.database_url);
         opt.max_connections(10)
             .sqlx_logging(false)
