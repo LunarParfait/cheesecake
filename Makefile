@@ -13,7 +13,7 @@ build:
 	rm -r dist || true
 	mkdir dist dist/static dist/templates
 	node build-assets.js
-	cargo build -p app --release
+	cargo build -p bin --release
 
 test:
 	cargo test
@@ -31,10 +31,10 @@ lint-prod:
 	cargo clippy --release
 
 dev:
-	LOG_LEVEL=DEBUG RUST_BACKTRACE=1 cargo run -p app
+	LOG_LEVEL=DEBUG RUST_BACKTRACE=1 cargo run -p bin
 
 prod: build
-	RUST_BACKTRACE=1 cargo run -p app --release
+	RUST_BACKTRACE=1 cargo run -p bin --release
 
 migrate-all:
 	cargo run -p migration

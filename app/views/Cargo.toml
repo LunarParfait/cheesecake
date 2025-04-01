@@ -1,5 +1,5 @@
 [package]
-name = "view"
+name = "views"
 version = "0.1.0"
 edition = "2024"
 
@@ -16,3 +16,4 @@ thiserror = "2.0.12"
 tokio = "1.44.1"
 anyhow = "1.0.97"
 entities = { path = "../../db/entities" }
+config = { path = "../../config" }

@@ -1,5 +1,4 @@
-use super::AppTemplate;
-use crate::RenderResult;
+use config::velvet::view::{RenderResult, AppTemplate};
 use entities::user;
 use serde::Serialize;
 

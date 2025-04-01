@@ -1,5 +1,5 @@
 [package]
-name = "controller"
+name = "controllers"
 version = "0.1.0"
 edition = "2024"
 
@@ -11,7 +11,7 @@ anyhow = "1.0.97"
 axum = { version = "0.8.1", features = ["ws"] }
 tower = { version = "0.5.2", features = ["balance", "limit", "load-shed", "timeout"] }
 tower-http = { version = "0.6.2", features = ["fs", "timeout", "trace"] }
-types = { path = "../types" }
-view = { path = "../view" }
+views = { path = "../views" }
 sea-orm = { version = "1.1.7", features = ["sqlx-sqlite"] }
 entities = { path = "../../db/entities" }
+config = { path = "../../config" }
