@@ -1,0 +1,3 @@
+[workspace]
+resolver = "2"
+members = ["test", "db/migrations", "db/entities", "app/controllers", "app/views", "config", "bin"]
