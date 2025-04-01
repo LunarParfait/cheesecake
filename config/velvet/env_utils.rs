@@ -164,6 +164,7 @@ pub trait AppEnvironmentTrait {
 pub struct EnvLock<T: AppEnvironmentTrait>(OnceLock<T>);
 
 impl<T: AppEnvironmentTrait> EnvLock<T> {
+    #[allow(clippy::new_without_default)]
     pub const fn new() -> Self {
         Self(OnceLock::new())
     }

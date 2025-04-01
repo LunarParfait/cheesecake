@@ -25,7 +25,7 @@ async fn main() {
     #[cfg(debug_assertions)]
     config::velvet::view::setup_hotwatch();
 
-    let app_state = AppStateFactory::new().await;
+    let app_state = AppStateFactory::create().await;
     let app = routing::router(app_state.clone())
         .merge(controllers::router())
         .with_state(app_state.clone());

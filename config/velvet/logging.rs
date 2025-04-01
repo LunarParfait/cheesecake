@@ -14,6 +14,7 @@ pub async fn init_logging() {
 
     let log_dir = log_directory().await;
 
+    // TODO: implement this thing
     // Filtering crates
     let filtered = vec![]; // You can had here any crates that are too verbose
     let env_filter = filter(&filtered);
