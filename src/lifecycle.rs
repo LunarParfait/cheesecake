@@ -1,4 +1,4 @@
-use crate::helpers::get_app_dir;
+use crate::helpers::{get_app_dir, normalize_dir};
 use anyhow::bail;
 use git2::{Repository, RepositoryInitOptions};
 use indicatif::ProgressBar;
@@ -49,4 +49,13 @@ pub fn new_application(name: String) -> anyhow::Result<()> {
     spinner_thread.join().unwrap();
 
     res
+}
+
+pub fn clean() -> anyhow::Result<()> {
+    normalize_dir("cargo")?.arg("clean").status()?;
+    normalize_dir("rm")?
+        .args(["-r", "target", "dist"])
+        .status()?;
+
+    Ok(())
 }
