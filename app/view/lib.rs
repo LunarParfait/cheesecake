@@ -14,7 +14,7 @@ pub mod root;
 
 #[cfg(debug_assertions)]
 static TERA: LazyLock<RwLock<Tera>> = LazyLock::new(|| {
-    Tera::new(concat!("view/templates", "**/*.html"))
+    Tera::new(concat!("resources/templates", "**/*.html"))
         .unwrap()
         .into()
 });
@@ -37,7 +37,7 @@ static HOTWATCH: LazyLock<Hotwatch> = LazyLock::new(|| {
     let mut hotwatch =
         Hotwatch::new_with_custom_delay(Duration::new(0, 300000000)).unwrap();
     hotwatch
-        .watch("view/templates", |event: Event| {
+        .watch("resources/templates", |event: Event| {
             match event.kind {
                 EventKind::Any | EventKind::Other => (),
                 _ => {

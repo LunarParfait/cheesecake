@@ -13,5 +13,5 @@ tower = { version = "0.5.2", features = ["balance", "limit", "load-shed", "timeo
 tower-http = { version = "0.6.2", features = ["fs", "timeout", "trace"] }
 types = { path = "../types" }
 view = { path = "../view" }
-database = { path = "../database" }
 sea-orm = { version = "1.1.7", features = ["sqlx-sqlite"] }
+entities = { path = "../../db/entities" }

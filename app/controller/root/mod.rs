@@ -6,7 +6,7 @@ use std::sync::Arc;
 use types::app_error::AppResult;
 use types::app_state::AppState;
 use sea_orm::*;
-use database::entities::{prelude::*, user};
+use entities::{prelude::*, user};
 
 pub fn router() -> Router<Arc<AppState>> {
     Router::new().route("/", get(index))
