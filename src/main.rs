@@ -1,6 +1,9 @@
 use self::controller::ControllerCommand;
 use self::helpers::get_app_dir;
-use self::lifecycle::{clean, new_application};
+use self::lifecycle::{
+    check_app, clean_app, lint_app, new_app, run_dev, run_release, run_task,
+    test_app,
+};
 use self::model::ModelCommand;
 use self::view::ViewCommand;
 use crate::migration::MigrateCommand;
@@ -78,13 +81,17 @@ fn main() -> anyhow::Result<()> {
     let cli = Cli::parse();
 
     match cli.command {
-        Command::New { name } => new_application(name),
-        Command::Clean => clean(),
+        Command::New { name } => new_app(name),
+        Command::Clean => clean_app(),
         Command::Build => todo!(),
-        Command::Test => todo!(),
-        Command::Check => todo!(),
-        Command::Lint => todo!(),
-        Command::Run { command } => todo!(),
+        Command::Test => test_app(),
+        Command::Check => check_app(),
+        Command::Lint => lint_app(),
+        Command::Run { command } => match command {
+            RunCommand::Dev => run_dev(),
+            RunCommand::Release => run_release(),
+            RunCommand::Task { name } => run_task(name.as_str()),
+        },
         Command::Migration { command } => todo!(),
         Command::Model { command } => todo!(),
         Command::View { command } => todo!(),
