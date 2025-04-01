@@ -1,10 +1,11 @@
-use environment::ENV;
 use std::fs::File;
 use std::path::Path;
 use std::path::PathBuf;
 use std::sync::Arc;
 use tracing_subscriber::EnvFilter;
 use tracing_subscriber::prelude::*;
+
+use super::env::BASE_ENV;
 
 pub async fn init_logging() {
     if cfg!(debug_assertions) {
@@ -64,8 +65,7 @@ pub fn canonicalize_unexistent(s: &Path) -> Option<PathBuf> {
 
 // This function creates the log directory and returns its path.
 async fn log_directory() -> PathBuf {
-    dbg!(&ENV.log_directory);
-    let canonical = canonicalize_unexistent(&ENV.log_directory)
+    let canonical = canonicalize_unexistent(&BASE_ENV.log_directory)
         .unwrap_or_else(|| panic!("Failed to canonicalize path!"));
 
     tokio::fs::create_dir_all(&canonical)
@@ -86,7 +86,7 @@ fn filter(filter_entries: &[&str]) -> EnvFilter {
     }
 
     let filter = EnvFilter::builder()
-        .with_default_directive(ENV.log_level.into())
+        .with_default_directive(BASE_ENV.log_level.into())
         .from_env()
         .unwrap_or_else(|e| {
             panic!("Invalid directives for tracing subscriber: {e}.")

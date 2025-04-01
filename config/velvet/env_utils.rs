@@ -2,9 +2,7 @@ use std::ops::Deref;
 use std::str::FromStr;
 use std::sync::OnceLock;
 
-mod environment;
 use anyhow::bail;
-pub use environment::*;
 
 /// Useful when you want to handle the Result yourself, and do not want the
 /// result to be leaked.
@@ -159,25 +157,26 @@ where
     var_or(name, Box::leak(default().into()))
 }
 
-pub struct EnvLock(OnceLock<Environment>);
+pub trait AppEnvironmentTrait {
+    fn new() -> Self;
+}
 
-impl EnvLock {
-    const fn new() -> Self {
+pub struct EnvLock<T: AppEnvironmentTrait>(OnceLock<T>);
+
+impl<T: AppEnvironmentTrait> EnvLock<T> {
+    pub const fn new() -> Self {
         Self(OnceLock::new())
     }
 
     pub fn init(&self) {
-        dotenvy::dotenv().unwrap();
-        dotenvy::from_filename_override(".env.local").unwrap();
-
         self.0
-            .set(Environment::new())
+            .set(T::new())
             .unwrap_or_else(|_| panic!("Failed to initialize environment"));
     }
 }
 
-impl Deref for EnvLock {
-    type Target = Environment;
+impl<T: AppEnvironmentTrait> Deref for EnvLock<T> {
+    type Target = T;
 
     fn deref(&self) -> &Self::Target {
         self.0
@@ -186,8 +185,8 @@ impl Deref for EnvLock {
     }
 }
 
-impl AsRef<Environment> for EnvLock {
-    fn as_ref(&self) -> &Environment {
+impl<T: AppEnvironmentTrait> AsRef<T> for EnvLock<T> {
+    fn as_ref(&self) -> &T {
         self
     }
 }

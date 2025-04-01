@@ -14,14 +14,11 @@ hypermedia driven web applications in Rust using the SASHA stack (SQLite, Axum, 
 
 ## TODO
 
-- organize dirs
 - create cli
 - add preludes for cli
-- resources dir with templates and assets
-- vendor dir with 3rd party
 - Dockerfile
-- storage dir for user assets
 - Controller trait
+- user storage?
 - filter params
 - ACL
 - webpack?

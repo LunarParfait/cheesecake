@@ -10,8 +10,6 @@ use tera::Tera;
 #[cfg(debug_assertions)]
 use tokio::sync::watch;
 
-pub mod root;
-
 #[cfg(debug_assertions)]
 static TERA: LazyLock<RwLock<Tera>> = LazyLock::new(|| {
     Tera::new(concat!("resources/templates", "**/*.html"))
