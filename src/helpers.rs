@@ -1,4 +1,6 @@
 use std::path::PathBuf;
+use std::process::{Child, Command};
+use anyhow::anyhow;
 
 /// Looks for Cargo.toml with app = "cheesecake" metadata
 pub fn get_app_dir() -> Option<PathBuf> {
@@ -19,4 +21,13 @@ pub fn get_app_dir() -> Option<PathBuf> {
         }
         _ => None,
     }
+}
+
+pub fn normalize_dir(command: &str) -> anyhow::Result<Command> {
+    let app_dir = get_app_dir().ok_or(anyhow!("Not in a cheesecake app"))?;
+    let mut command = Command::new(command);
+    command
+        .current_dir(app_dir.to_str().unwrap());
+
+    Ok(command)
 }
