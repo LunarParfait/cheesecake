@@ -1,5 +1,6 @@
 setup:
 	cp -n .env.example .env.local
+	mkdir -p storage
 	mkdir -p storage/db
 	touch storage/db/db.sqlite
 	pnpm i
