@@ -34,7 +34,7 @@ macro_rules! create_routes {
     ($($controller:ident),+) => {{
         use config::create_routes_internal;
         use config::create_single_route;
-        use config::velvet::controller::Controller;
+        use config::cheesecake::controller::Controller;
         let mut routes = Router::new();
         create_routes_internal! { routes, $($controller),+ };
         routes

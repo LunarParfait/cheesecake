@@ -5,7 +5,7 @@ edition = "2024"
 
 [[bin]]
 path = "main.rs"
-name = "velvet-app"
+name = "cheesecake-app"
 
 [dependencies]
 dotenvy = "0.15.7"

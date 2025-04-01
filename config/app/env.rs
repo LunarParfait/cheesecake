@@ -1,4 +1,4 @@
-use crate::velvet::env_utils::{AppEnvironmentTrait, EnvLock};
+use crate::cheesecake::env_utils::{AppEnvironmentTrait, EnvLock};
 
 pub struct AppEnv {}
 

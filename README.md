@@ -1,5 +1,5 @@
 
-# Velvet
+# Cheesecake
 
 The end goal is for this to be an opinionated meta-framework for building fullstack
 hypermedia driven web applications in Rust using the SASHA stack (SQLite, Axum, Shoelace, HTMX, AlpineJS)
