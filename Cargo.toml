@@ -1,3 +1,3 @@
 [workspace]
 resolver = "2"
-members = ["database", "controller", "test", "types", "view", "app", "environment"]
+members = ["test", "db/migrations", "db/entities", "app/controllers", "app/views", "config", "bin"]
