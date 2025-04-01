@@ -1,5 +1,5 @@
 use super::app_state::AppState;
-use crate::velvet::app_error::AppError;
+use crate::cheesecake::app_error::AppError;
 use anyhow::anyhow;
 use axum::body::Body;
 use axum::error_handling::HandleErrorLayer;

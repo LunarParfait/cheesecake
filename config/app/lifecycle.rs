@@ -1,5 +1,5 @@
 use super::app_state::AppState;
-use crate::velvet::lifecycle::AxumLifecycleTrait;
+use crate::cheesecake::lifecycle::AxumLifecycleTrait;
 use anyhow::Result;
 use async_trait::async_trait;
 use tracing::{info, warn};

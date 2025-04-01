@@ -1,5 +1,5 @@
-use crate::velvet::app_state::AppStateFactoryTrait;
-use crate::velvet::env::BASE_ENV;
+use crate::cheesecake::app_state::AppStateFactoryTrait;
+use crate::cheesecake::env::BASE_ENV;
 use async_trait::async_trait;
 use sea_orm::{ConnectOptions, Database, DatabaseConnection};
 use std::sync::Arc;

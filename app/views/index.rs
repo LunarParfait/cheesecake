@@ -1,4 +1,4 @@
-use config::velvet::view::{AppTemplate, RenderResult};
+use config::cheesecake::view::{AppTemplate, RenderResult};
 use entities::user;
 use serde::Serialize;
 

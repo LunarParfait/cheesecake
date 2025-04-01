@@ -1,11 +1,11 @@
 use config::app::app_state::AppStateFactory;
 use config::app::env::ENV;
 use config::app::lifecycle::AxumLifecycle;
-use config::velvet::app_state::AppStateFactoryTrait;
-use config::velvet::env::BASE_ENV;
-use config::velvet::lifecycle::AxumLifecycleTrait;
-use config::velvet::logging::init_logging;
-use config::velvet::routing;
+use config::cheesecake::app_state::AppStateFactoryTrait;
+use config::cheesecake::env::BASE_ENV;
+use config::cheesecake::lifecycle::AxumLifecycleTrait;
+use config::cheesecake::logging::init_logging;
+use config::cheesecake::routing;
 use std::net::SocketAddr;
 use tokio::net::TcpListener;
 use tokio::signal;
@@ -23,7 +23,7 @@ async fn main() {
     info!("Logging initialized");
 
     #[cfg(debug_assertions)]
-    config::velvet::view::setup_hotwatch();
+    config::cheesecake::view::setup_hotwatch();
 
     let app_state = AppStateFactory::create().await;
     let app = routing::router(app_state.clone())
