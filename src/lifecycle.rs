@@ -1,3 +1,5 @@
+use crate::helpers::get_app_dir;
+use anyhow::bail;
 use git2::{Repository, RepositoryInitOptions};
 use indicatif::ProgressBar;
 use std::sync::Arc;
@@ -11,6 +13,13 @@ pub const REPO_URL: &'static str =
 pub fn new_application(name: String) -> anyhow::Result<()> {
     let spinner = ProgressBar::new_spinner();
     spinner.set_message("Downloading scaffolding...");
+
+    if let Some(path) = get_app_dir() {
+        bail!(format!(
+            "Already inside cheesecake app: {}",
+            path.to_str().unwrap()
+        ));
+    }
 
     let outdir = env::current_dir()?.join(name);
 
