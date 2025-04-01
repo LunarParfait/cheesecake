@@ -1,11 +1,14 @@
 use self::controller::ControllerCommand;
+use self::helpers::get_app_dir;
 use self::lifecycle::new_application;
 use self::model::ModelCommand;
 use self::view::ViewCommand;
 use crate::migration::MigrateCommand;
+use anyhow::anyhow;
 use clap::{Parser, Subcommand};
 
 pub mod controller;
+pub mod helpers;
 pub mod lifecycle;
 pub mod migration;
 pub mod model;
@@ -57,6 +60,8 @@ pub enum Command {
         #[command(subcommand)]
         command: ControllerCommand,
     },
+    /// Gets current app directory
+    Dir,
 }
 
 #[derive(Debug, Subcommand)]
@@ -84,5 +89,14 @@ fn main() -> anyhow::Result<()> {
         Command::Model { command } => todo!(),
         Command::View { command } => todo!(),
         Command::Controller { command } => todo!(),
+        Command::Dir => {
+            println!(
+                "{}",
+                get_app_dir()
+                    .ok_or(anyhow!("Cheesecake application not found"))
+                    .map(|p| p.to_str().unwrap().to_owned())?
+            );
+            Ok(())
+        }
     }
 }
