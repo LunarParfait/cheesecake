@@ -1,17 +1,16 @@
 setup:
 	cp -n .env.example .env.local
-	mkdir -p database/db
-	touch database/db/db.sqlite
+	mkdir -p storage/db
+	touch storage/db/db.sqlite
 	pnpm i
 
 clean:
-	rm -r database/db || true
 	rm -r dist logs || true
 	cargo clean
 
 build:
 	rm -r dist || true
-	mkdir dist dist/public dist/templates
+	mkdir dist dist/static dist/templates
 	node build-assets.js
 	cargo build -p app --release
 
@@ -36,10 +35,22 @@ dev:
 prod: build
 	RUST_BACKTRACE=1 cargo run -p app --release
 
-migrate:
-	cargo run -p app -- --migrate-only
+migrate-all:
+	cargo run -p migration
+
+migrate-reset:
+	cargo run -p migration -- reset
+
+migrate-status:
+	cargo run -p migration -- status
+
+migrate-up:
+	cargo run -p migration -- up
+
+migrate-down:
+	cargo run -p migration -- down
 
 generate-entities:
-	sea-orm-cli generate entity --with-serde -o database/entities
+	sea-orm-cli generate entity --with-serde both -o db/entities/src
 
-.PHONY: setup clean build test check check-prod lint lint-prod dev prod migrate generate-entities
+.PHONY: setup clean build test check check-prod lint lint-prod dev prod migrate-all migrate-reset migrate-status migrate-up migrate-down generate-entities

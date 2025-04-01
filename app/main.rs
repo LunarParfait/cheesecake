@@ -4,21 +4,27 @@ use environment::ENV;
 use tokio::signal;
 use tracing::{info, warn};
 use types::app_state::AppState;
-
+use sea_orm::{ConnectOptions, Database};
 use self::logging::init_logging;
 
 mod logging;
 
 #[tokio::main]
 async fn main() {
-    let args: Vec<String> = std::env::args().collect();
     ENV.init();
 
     init_logging().await;
-
     info!("Logging initialized");
 
-    let pool = database::init_sqlite(ENV.database_url).await.unwrap();
+    // Create database connection pool
+
+    let mut opt = ConnectOptions::new(ENV.database_url);
+    opt.max_connections(10)
+        .sqlx_logging(false)
+        .min_connections(10);
+
+    let pool = Database::connect(opt).await.unwrap();
+
     let max_connections = pool
         .get_sqlite_connection_pool()
         .options()
@@ -29,15 +35,13 @@ async fn main() {
         max_connections
     );
 
-    database::migrate(&pool).await.unwrap();
-
-    if args.contains(&"--migrate-only".to_string()) {
-        info!("Migration cuccessful");
-        return;
-    }
+    // If on dev environment, setup views hotwatch
 
     #[cfg(debug_assertions)]
     view::setup_hotwatch();
+
+    // Create app state and router
+    // TODO: continue documenting
 
     let app_state = Arc::new(AppState { pool });
     let app = controller::router(max_connections).with_state(app_state.clone());

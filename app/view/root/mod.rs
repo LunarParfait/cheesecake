@@ -1,6 +1,6 @@
 use super::AppTemplate;
 use crate::RenderResult;
-use database::entities::user;
+use entities::user;
 use serde::Serialize;
 
 #[derive(Serialize, Default)]

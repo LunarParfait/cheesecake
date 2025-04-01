@@ -26,9 +26,9 @@ pub mod root;
 
 pub fn router(max_connections: u32) -> Router<Arc<AppState>> {
     let serve_dir = if cfg!(debug_assertions) {
-        "public"
+        "resources/static"
     } else {
-        "dist/public"
+        "dist/static"
     };
 
     #[cfg(debug_assertions)]
@@ -40,7 +40,7 @@ pub fn router(max_connections: u32) -> Router<Arc<AppState>> {
     router
         .route("/ping", get(ping))
         .merge(root::router())
-        .nest_service("/public", ServeDir::new(serve_dir))
+        .nest_service("/static", ServeDir::new(serve_dir))
         .layer((HandleErrorLayer::new(handle_error), LoadShedLayer::new()))
         .layer(TraceLayer::new_for_http())
         .layer(TimeoutLayer::new(Duration::from_secs(10)))
@@ -55,7 +55,6 @@ async fn ping() -> impl IntoResponse {
 
 #[cfg(debug_assertions)]
 async fn dev_server(ws: WebSocketUpgrade) -> impl IntoResponse {
-
     ws.on_upgrade(dev_socket)
 }
 
@@ -64,7 +63,6 @@ async fn dev_socket(mut socket: WebSocket) {
     use axum::extract::ws::Message;
 
     let mut receiver = view::HOTWATCH_CHANNEL.0.subscribe();
-
     while receiver.changed().await.is_ok() {
         if socket.send(Message::binary("")).await.is_err() {
             return;

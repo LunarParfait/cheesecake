@@ -20,9 +20,9 @@ function* readAllFiles(dir) {
   }
 }
 
-const pubin = "public"
-const pubout = "dist/public"
-const templin = "view/templates"
+const pubin = "resources/static"
+const pubout = "dist/static"
+const templin = "resources/templates"
 const templout = "dist/templates"
 
 const jinjaTagPattern = /({{.*?}}|{%.*?%}|{#.*?#})/gs;
