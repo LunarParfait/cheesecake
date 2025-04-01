@@ -1,5 +1,5 @@
-use crate::helpers::{get_app_dir, normalize_dir};
-use anyhow::bail;
+use crate::helpers::{get_app_dir, get_task, normalize_dir};
+use anyhow::{anyhow, bail};
 use git2::{Repository, RepositoryInitOptions};
 use indicatif::ProgressBar;
 use std::sync::Arc;
@@ -10,7 +10,7 @@ use std::{env, fs, thread};
 pub const REPO_URL: &'static str =
     "https://github.com/LunarParfait/cheesecake-base.git";
 
-pub fn new_application(name: String) -> anyhow::Result<()> {
+pub fn new_app(name: String) -> anyhow::Result<()> {
     let spinner = ProgressBar::new_spinner();
     spinner.set_message("Downloading scaffolding...");
 
@@ -51,10 +51,60 @@ pub fn new_application(name: String) -> anyhow::Result<()> {
     res
 }
 
-pub fn clean() -> anyhow::Result<()> {
+pub fn clean_app() -> anyhow::Result<()> {
     normalize_dir("cargo")?.arg("clean").status()?;
     normalize_dir("rm")?
         .args(["-r", "target", "dist"])
+        .status()?;
+
+    Ok(())
+}
+
+pub fn build_app() -> anyhow::Result<()> {
+    todo!();
+}
+
+pub fn test_app() -> anyhow::Result<()> {
+    normalize_dir("cargo")?.arg("test").status()?;
+
+    Ok(())
+}
+
+pub fn check_app() -> anyhow::Result<()> {
+    normalize_dir("cargo")?.arg("check").status()?;
+
+    Ok(())
+}
+
+pub fn lint_app() -> anyhow::Result<()> {
+    normalize_dir("cargo")?.arg("clippy").status()?;
+
+    Ok(())
+}
+
+pub fn run_dev() -> anyhow::Result<()> {
+    normalize_dir("cargo")?
+        .args(["run", "-p", "bin"])
+        .env("RUST_BACKTRACE", "1")
+        .status()?;
+
+    Ok(())
+}
+
+pub fn run_release() -> anyhow::Result<()> {
+    normalize_dir("target/release/cheesecake-app")?
+        .env("RUST_BACKTRACE", "1")
+        .status()?;
+
+    Ok(())
+}
+
+pub fn run_task(name: &str) -> anyhow::Result<()> {
+    normalize_dir("sh")?
+        .args([
+            "-c",
+            get_task(name).ok_or(anyhow!("Task not found"))?.as_str(),
+        ])
         .status()?;
 
     Ok(())
