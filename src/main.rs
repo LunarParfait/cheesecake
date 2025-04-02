@@ -1,8 +1,7 @@
 use self::controller::ControllerCommand;
 use self::helpers::get_app_dir;
 use self::lifecycle::{
-    check_app, clean_app, lint_app, new_app, run_dev, run_release, run_task,
-    test_app,
+    check_app, clean_app, lint_app, new_app, run_dev, run_release, run_task, setup_app, test_app
 };
 use self::model::ModelCommand;
 use self::view::ViewCommand;
@@ -28,6 +27,8 @@ pub struct Cli {
 pub enum Command {
     /// Creates new application in a new directory
     New { name: String },
+    /// Sets up application
+    Setup,
     /// Cleans application's temp files
     Clean,
     /// Builds application
@@ -82,6 +83,7 @@ fn main() -> anyhow::Result<()> {
 
     match cli.command {
         Command::New { name } => new_app(name),
+        Command::Setup => setup_app(),
         Command::Clean => clean_app(),
         Command::Build => todo!(),
         Command::Test => test_app(),

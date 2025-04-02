@@ -51,6 +51,17 @@ pub fn new_app(name: String) -> anyhow::Result<()> {
     res
 }
 
+pub fn setup_app() -> anyhow::Result<()> {
+    normalize_dir("mkdir")?
+        .args(["-p", "storage/db"]).status()?;
+    normalize_dir("touch")?
+        .arg("storage/db/db.sqlite").status()?;
+    normalize_dir("cp")?
+        .args([".env.example", ".env.local"]).status()?;
+
+    Ok(())
+}
+
 pub fn clean_app() -> anyhow::Result<()> {
     normalize_dir("cargo")?.arg("clean").status()?;
     normalize_dir("rm")?
