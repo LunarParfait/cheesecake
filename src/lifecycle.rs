@@ -1,9 +1,14 @@
-use crate::helpers::{get_app_dir, get_task, normalize_dir};
-use anyhow::{anyhow, bail};
+use crate::helpers::{files_recursive, get_app_dir, get_task, normalize_dir};
+use anyhow::bail;
 use git2::{Repository, RepositoryInitOptions};
 use indicatif::ProgressBar;
-use std::sync::Arc;
-use std::sync::atomic::{AtomicBool, Ordering};
+use lightningcss::stylesheet::{
+    MinifyOptions, ParserOptions, PrinterOptions, StyleSheet,
+};
+use minify_html::Cfg;
+use minify_js::{Session, TopLevelMode};
+use std::fs::File;
+use std::io::{Read, Write};
 use std::time::Duration;
 use std::{env, fs, thread};
 
@@ -13,8 +18,9 @@ pub const REPO_URL: &'static str =
 pub fn new_app(name: String) -> anyhow::Result<()> {
     let spinner = ProgressBar::new_spinner();
     spinner.set_message("Downloading scaffolding...");
+    spinner.enable_steady_tick(Duration::from_millis(100));
 
-    if let Some(path) = get_app_dir() {
+    if let Ok(path) = get_app_dir() {
         bail!(format!(
             "Already inside cheesecake app: {}",
             path.to_str().unwrap()
@@ -35,29 +41,23 @@ pub fn new_app(name: String) -> anyhow::Result<()> {
         Ok(())
     });
 
-    let running = Arc::new(AtomicBool::new(true));
-    let running_cloned = running.clone();
-    let spinner_thread = thread::spawn(move || {
-        while running_cloned.load(Ordering::SeqCst) {
-            spinner.tick();
-            thread::sleep(Duration::from_millis(100))
-        }
-    });
-
     let res = command_thread.join().unwrap();
-    running.store(false, Ordering::SeqCst);
-    spinner_thread.join().unwrap();
+
+    spinner.finish_with_message("Done!");
 
     res
 }
 
 pub fn setup_app() -> anyhow::Result<()> {
     normalize_dir("mkdir")?
-        .args(["-p", "storage/db"]).status()?;
+        .args(["-p", "storage/db"])
+        .status()?;
     normalize_dir("touch")?
-        .arg("storage/db/db.sqlite").status()?;
+        .arg("storage/db/db.sqlite")
+        .status()?;
     normalize_dir("cp")?
-        .args([".env.example", ".env.local"]).status()?;
+        .args([".env.example", ".env.local"])
+        .status()?;
 
     Ok(())
 }
@@ -72,7 +72,90 @@ pub fn clean_app() -> anyhow::Result<()> {
 }
 
 pub fn build_app() -> anyhow::Result<()> {
-    todo!();
+    normalize_dir("mkdir")?
+        .args(["-p", "dist", "dist/static", "dist/templates"]).status()?;
+
+    let resources_dir = get_app_dir()?.join("resources");
+    let static_dir = resources_dir.join("static");
+    let templates_dir = resources_dir.join("templates");
+
+    let dist_dir = get_app_dir()?.join("dist");
+    let static_dist_dir = dist_dir.join("static");
+    let templates_dist_dir = dist_dir.join("templates");
+
+    let mut html_opts = Cfg::new();
+    html_opts.minify_js = true;
+    html_opts.minify_css = true;
+
+    let spinner = ProgressBar::new_spinner();
+    spinner.set_message("Minifying js/css and copying static assets...");
+    spinner.enable_steady_tick(Duration::from_millis(100));
+
+    for entry in files_recursive(static_dir.clone())? {
+        let path = entry.path();
+        let relpath = path.strip_prefix(static_dir.clone())?;
+
+        match path.extension().map(|x| x.to_str().unwrap()) {
+            Some("js") => {
+                let mut contents = Vec::new();
+                File::open(path.clone())?.read_to_end(&mut contents)?;
+
+                let session = Session::new();
+                let mut out = Vec::new();
+                minify_js::minify(
+                    &session,
+                    TopLevelMode::Global,
+                    &contents,
+                    &mut out,
+                )
+                .unwrap();
+
+                File::create(static_dist_dir.join(relpath))?.write_all(&out)?;
+            }
+            Some("css") => {
+                let mut contents = Vec::new();
+                File::open(entry.path())?.read_to_end(&mut contents)?;
+                let contents = String::from_utf8(contents)?;
+
+                let mut stylesheet =
+                    StyleSheet::parse(&contents, ParserOptions::default())
+                        .unwrap();
+
+                stylesheet.minify(MinifyOptions::default())?;
+
+                let mut opts = PrinterOptions::default();
+                opts.minify = true;
+
+                let out = stylesheet.to_css(opts)?;
+                File::create(static_dist_dir.join(relpath))?
+                    .write_all(out.code.as_bytes())?;
+            }
+            _ => {
+                fs::copy(path.clone(), static_dist_dir.join(relpath))?;
+            }
+        }
+    }
+
+    spinner.set_message("Minifying and moving template files");
+
+    for entry in files_recursive(templates_dir.clone())? {
+        let path = entry.path();
+        let relpath = path.strip_prefix(templates_dir.clone())?;
+
+        let mut contents = Vec::new();
+        File::open(path.clone())?.read_to_end(&mut contents)?;
+
+        let out = minify_html::minify(&contents, &html_opts);
+        File::create(templates_dist_dir.join(relpath))?
+            .write_all(&out)?;
+    }
+
+    spinner.finish_and_clear();
+
+    normalize_dir("cargo")?
+        .args(["build", "--release"]).status()?;
+
+    Ok(())
 }
 
 pub fn test_app() -> anyhow::Result<()> {
@@ -112,10 +195,7 @@ pub fn run_release() -> anyhow::Result<()> {
 
 pub fn run_task(name: &str) -> anyhow::Result<()> {
     normalize_dir("sh")?
-        .args([
-            "-c",
-            get_task(name).ok_or(anyhow!("Task not found"))?.as_str(),
-        ])
+        .args(["-c", get_task(name)?.as_str()])
         .status()?;
 
     Ok(())

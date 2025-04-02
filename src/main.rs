@@ -1,12 +1,11 @@
 use self::controller::ControllerCommand;
 use self::helpers::get_app_dir;
 use self::lifecycle::{
-    check_app, clean_app, lint_app, new_app, run_dev, run_release, run_task, setup_app, test_app
+    build_app, check_app, clean_app, lint_app, new_app, run_dev, run_release, run_task, setup_app, test_app
 };
 use self::model::ModelCommand;
 use self::view::ViewCommand;
 use crate::migration::MigrateCommand;
-use anyhow::anyhow;
 use clap::{Parser, Subcommand};
 
 pub mod controller;
@@ -85,7 +84,7 @@ fn main() -> anyhow::Result<()> {
         Command::New { name } => new_app(name),
         Command::Setup => setup_app(),
         Command::Clean => clean_app(),
-        Command::Build => todo!(),
+        Command::Build => build_app(),
         Command::Test => test_app(),
         Command::Check => check_app(),
         Command::Lint => lint_app(),
@@ -99,12 +98,7 @@ fn main() -> anyhow::Result<()> {
         Command::View { command } => todo!(),
         Command::Controller { command } => todo!(),
         Command::Dir => {
-            println!(
-                "{}",
-                get_app_dir()
-                    .ok_or(anyhow!("Cheesecake application not found"))
-                    .map(|p| p.to_str().unwrap().to_owned())?
-            );
+            println!("{}", get_app_dir()?.to_str().unwrap());
             Ok(())
         }
     }
