@@ -1,7 +1,8 @@
 use self::controller::ControllerCommand;
 use self::helpers::get_app_dir;
 use self::lifecycle::{
-    build_app, check_app, clean_app, lint_app, new_app, run_dev, run_release, run_task, setup_app, test_app
+    build_app, check_app, clean_app, lint_app, new_app, run_dev, run_release,
+    run_task, setup_app, test_app,
 };
 use self::model::ModelCommand;
 use self::view::ViewCommand;
@@ -43,26 +44,28 @@ pub enum Command {
         #[command(subcommand)]
         command: RunCommand,
     },
-    /// Migration related commands
-    Migration {
-        #[command(subcommand)]
-        command: MigrateCommand,
-    },
-    /// Model related commands
-    Model {
-        #[command(subcommand)]
-        command: ModelCommand,
-    },
-    /// View related commands
-    View {
-        #[command(subcommand)]
-        command: ViewCommand,
-    },
-    /// Controller related commands
-    Controller {
-        #[command(subcommand)]
-        command: ControllerCommand,
-    },
+    // TODO: implement these
+    // /// Migration related commands
+    // Migration {
+    //     #[command(subcommand)]
+    //     command: MigrateCommand,
+    // },
+    // /// Model related commands
+    // Model {
+    //     #[command(subcommand)]
+    //     command: ModelCommand,
+    // },
+    // /// View related commands
+    // View {
+    //     #[command(subcommand)]
+    //     command: ViewCommand,
+    // },
+    // /// Controller related commands
+    // Controller {
+    //     #[command(subcommand)]
+    //     command: ControllerCommand,
+    // },
+
     /// Gets current app directory
     Dir,
 }
@@ -93,10 +96,6 @@ fn main() -> anyhow::Result<()> {
             RunCommand::Release => run_release(),
             RunCommand::Task { name } => run_task(name.as_str()),
         },
-        Command::Migration { command } => todo!(),
-        Command::Model { command } => todo!(),
-        Command::View { command } => todo!(),
-        Command::Controller { command } => todo!(),
         Command::Dir => {
             println!("{}", get_app_dir()?.to_str().unwrap());
             Ok(())
