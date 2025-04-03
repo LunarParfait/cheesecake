@@ -1,50 +1,48 @@
 
 # Cheesecake
 
-The end goal is for this to be an opinionated meta-framework for building fullstack
-hypermedia driven web applications in Rust using the SASHA stack (SQLite, Axum, Shoelace, HTMX, AlpineJS)
+Still very much WIP
+
+The end goal is for this to be an opinionated batteries-included meta-framework
+for building fullstack hypermedia driven web applications in Rust. Something similar
+to ruby on rails and laravel.
+
+This repository contains the CLI tool used to create and manage the
+applications, the base scaffolding is located at
+[cheescake-base](https://github.com/LunarParfait/cheesecake-base).
 
 ## Dependencies
-
 - Make
-- PNPM
 - Rust 2024
-- Nodejs 23
 - SeaORM CLI
 
-## TODO
-
-- create cli
-- add preludes for cli
-- Dockerfile
-- Controller trait
-- user storage?
-- filter params
-- ACL
-- webpack?
-- starter kits
-- caching
-- i18n
-- security headers
-- resource fingerprinting
-- testing
-- encryption
-
-### cli functionality:
-
-- cronjobs
-- auth
-- db migrations
-- create view
-- create controller
-- create model
-- mail
-- run tests/lints
-- run dev environment
-- compile and run prod
+## CLI Installation
+1. Clone this repo
+2. run `make install`
+3. run `cake --help` to get CLI help
 
 
-### Dirs
-- move migrations crate to managed by sea-orm
-- add resources dir and move templates and assets to it
-- add vendor dir
+## Roadmap
+
+### CLI
+- [x] create new project
+- [x] lifecycle tasks (setup, clean, etc)
+- [x] build task
+- [x] test task
+- [x] check tasks
+- [x] lint tasks
+- [x] run tasks
+- [ ] migration tasks
+- [ ] model generation tasks
+- [ ] controller generation tasks
+- [ ] view generation tasks
+
+### Functionality
+- [ ] add Dockerfile
+- [ ] add user storage solution
+- [ ] add webpack build system
+- [ ] add starter kits
+- [ ] add builtin caching solutions
+- [ ] add i18n support
+- [ ] add security solutions
+
