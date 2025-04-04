@@ -9,7 +9,6 @@ use std::process::Command;
 #[derive(Deserialize)]
 pub struct Config {
     name: Option<String>,
-    author: Option<String>,
     version: Option<String>,
     cheesecake_version: String,
     tasks: HashMap<String, String>,
