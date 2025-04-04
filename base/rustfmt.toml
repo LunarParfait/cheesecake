@@ -1,0 +1,7 @@
+# Rustfmt configuration file
+
+# Set the maximum line width
+max_width = 80
+
+# Use 4 spaces for indentation
+tab_spaces = 4

@@ -1,0 +1,28 @@
+{# base #}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="/static/reset.css">
+  <link rel="stylesheet" href="/static/base.css">
+
+  {% if env_is_dev %}
+  <script>
+    // dev server
+    const devWS = new WebSocket("/dev-server")
+    devWS.addEventListener("message", () => {
+      devWS.close()
+      window.location.reload()
+    })
+  </script>
+  {% endif %}
+
+  {% block head %}{% endblock head %}
+</head>
+
+<body>
+  {% block body %}{% endblock body %}
+</body>
+
+</html>

@@ -1,4 +1,4 @@
-use crate::helpers::{files_recursive, get_app_dir, get_task, normalize_dir};
+use crate::helpers::{files_in_dir_recursive, get_app_dir, get_task, normalize_dir};
 use anyhow::bail;
 use git2::{Repository, RepositoryInitOptions};
 use indicatif::ProgressBar;
@@ -15,6 +15,7 @@ use std::{env, fs, thread};
 pub const REPO_URL: &'static str =
     "https://github.com/LunarParfait/cheesecake-base.git";
 
+// FIXME: this doesnt work anymore
 pub fn new_app(name: String) -> anyhow::Result<()> {
     let spinner = ProgressBar::new_spinner();
     spinner.set_message("Downloading scaffolding...");
@@ -91,7 +92,7 @@ pub fn build_app() -> anyhow::Result<()> {
     spinner.set_message("Minifying js/css and copying static assets...");
     spinner.enable_steady_tick(Duration::from_millis(100));
 
-    for entry in files_recursive(static_dir.clone())? {
+    for entry in files_in_dir_recursive(static_dir.clone())? {
         let path = entry.path();
         let relpath = path.strip_prefix(static_dir.clone())?;
 
@@ -138,7 +139,7 @@ pub fn build_app() -> anyhow::Result<()> {
 
     spinner.set_message("Minifying and moving template files");
 
-    for entry in files_recursive(templates_dir.clone())? {
+    for entry in files_in_dir_recursive(templates_dir.clone())? {
         let path = entry.path();
         let relpath = path.strip_prefix(templates_dir.clone())?;
 
