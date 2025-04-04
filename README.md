@@ -4,15 +4,15 @@
 Still very much WIP
 
 The end goal is for this to be an opinionated batteries-included meta-framework
-for building fullstack hypermedia driven web applications in Rust. Something similar
+for building fullstack backend focused web applications in Rust. Something similar
 to ruby on rails and laravel.
 
 This repository contains the CLI tool used to create and manage the
-applications, the base scaffolding is located at
-[cheescake-base](https://github.com/LunarParfait/cheesecake-base).
+applications, the presets area located at
+[cheescake-presets](https://github.com/LunarParfait/cheesecake-presets).
 
 ## Dependencies
-- Make
+- Make (to install CLI tool)
 - Rust 2024
 - SeaORM CLI
 
@@ -35,14 +35,17 @@ applications, the base scaffolding is located at
 - [ ] migration tasks
 - [ ] model generation tasks
 - [ ] controller generation tasks
+- [ ] middleware genreation tasks
 - [ ] view generation tasks
 
-### Functionality
+### General
 - [ ] add Dockerfile
+- [ ] remove SeaORM CLI dependency
 - [ ] add user storage solution
+- [ ] add non SQLite support
 - [ ] add webpack build system
 - [ ] add starter kits
 - [ ] add builtin caching solutions
 - [ ] add i18n support
 - [ ] add security solutions
-
+- [ ] add more presets
