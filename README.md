@@ -32,7 +32,7 @@ applications, the presets area located at
 - [x] check tasks
 - [x] lint tasks
 - [x] run tasks
-- [ ] migration tasks
+- [x] migration tasks
 - [ ] model generation tasks
 - [x] controller generation tasks
 - [ ] middleware generation tasks

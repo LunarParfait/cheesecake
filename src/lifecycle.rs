@@ -1,5 +1,5 @@
 use crate::helpers::{
-    files_in_dir_recursive, get_app_dir, get_task, normalize_dir,
+    files_in_dir_recursive, get_app_dir, get_task, normalize_root,
 };
 use anyhow::bail;
 use git2::build::RepoBuilder;
@@ -49,13 +49,13 @@ pub fn new_app(name: String) -> anyhow::Result<()> {
 }
 
 pub fn setup_app() -> anyhow::Result<()> {
-    normalize_dir("mkdir")?
+    normalize_root("mkdir")?
         .args(["-p", "storage/db", "dist"])
         .status()?;
-    normalize_dir("touch")?
+    normalize_root("touch")?
         .arg("storage/db/db.sqlite")
         .status()?;
-    normalize_dir("cp")?
+    normalize_root("cp")?
         .args([".env.example", ".env.local"])
         .status()?;
 
@@ -63,14 +63,14 @@ pub fn setup_app() -> anyhow::Result<()> {
 }
 
 pub fn clean_app() -> anyhow::Result<()> {
-    normalize_dir("cargo")?.arg("clean").status()?;
-    normalize_dir("rm")?.args(["-r", "dist"]).status()?;
+    normalize_root("cargo")?.arg("clean").status()?;
+    normalize_root("rm")?.args(["-r", "dist"]).status()?;
 
     Ok(())
 }
 
 pub fn build_app() -> anyhow::Result<()> {
-    normalize_dir("mkdir")?
+    normalize_root("mkdir")?
         .args(["-p", "dist", "dist/static", "dist/templates"])
         .status()?;
 
@@ -150,7 +150,7 @@ pub fn build_app() -> anyhow::Result<()> {
 
     spinner.finish_and_clear();
 
-    normalize_dir("cargo")?
+    normalize_root("cargo")?
         .args(["build", "--release"])
         .status()?;
 
@@ -158,25 +158,25 @@ pub fn build_app() -> anyhow::Result<()> {
 }
 
 pub fn test_app() -> anyhow::Result<()> {
-    normalize_dir("cargo")?.arg("test").status()?;
+    normalize_root("cargo")?.arg("test").status()?;
 
     Ok(())
 }
 
 pub fn check_app() -> anyhow::Result<()> {
-    normalize_dir("cargo")?.arg("check").status()?;
+    normalize_root("cargo")?.arg("check").status()?;
 
     Ok(())
 }
 
 pub fn lint_app() -> anyhow::Result<()> {
-    normalize_dir("cargo")?.arg("clippy").status()?;
+    normalize_root("cargo")?.arg("clippy").status()?;
 
     Ok(())
 }
 
 pub fn run_dev() -> anyhow::Result<()> {
-    normalize_dir("cargo")?
+    normalize_root("cargo")?
         .args(["run", "-p", "bin"])
         .env("RUST_BACKTRACE", "1")
         .status()?;
@@ -185,7 +185,7 @@ pub fn run_dev() -> anyhow::Result<()> {
 }
 
 pub fn run_release() -> anyhow::Result<()> {
-    normalize_dir("target/release/cheesecake-app")?
+    normalize_root("target/release/cheesecake-app")?
         .env("RUST_BACKTRACE", "1")
         .status()?;
 
@@ -193,7 +193,7 @@ pub fn run_release() -> anyhow::Result<()> {
 }
 
 pub fn run_task(name: &str) -> anyhow::Result<()> {
-    normalize_dir("sh")?
+    normalize_root("sh")?
         .args(["-c", get_task(name)?.as_str()])
         .status()?;
 
