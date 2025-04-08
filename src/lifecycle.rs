@@ -16,7 +16,7 @@ use std::time::Duration;
 use std::{env, fs};
 
 pub const REPO_URL: &'static str =
-    "https://github.com/LunarParfait/cheesecake-presets.git";
+    "https://github.com/LunarParfait/cheesecake-base.git";
 pub const MAJOR_VERSION: &'static str = env!("CARGO_PKG_VERSION_MAJOR");
 
 pub fn new_app(name: String) -> anyhow::Result<()> {
@@ -34,7 +34,7 @@ pub fn new_app(name: String) -> anyhow::Result<()> {
     let outdir = env::current_dir()?.join(name);
 
     RepoBuilder::new()
-        .branch(&format!("base-v{MAJOR_VERSION}"))
+        .branch(&format!("v{MAJOR_VERSION}"))
         .clone(REPO_URL, &outdir)?;
 
     fs::remove_dir_all(outdir.join(".git"))?;
