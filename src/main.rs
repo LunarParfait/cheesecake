@@ -46,10 +46,10 @@ pub enum Command {
     },
     // TODO: implement these
     // /// Migration related commands
-    // Migration {
-    //     #[command(subcommand)]
-    //     command: MigrateCommand,
-    // },
+    Migration {
+        #[command(subcommand)]
+        command: MigrateCommand,
+    },
     // /// Model related commands
     // Model {
     //     #[command(subcommand)]
@@ -96,6 +96,7 @@ fn main() -> anyhow::Result<()> {
             RunCommand::Release => run_release(),
             RunCommand::Task { name } => run_task(name.as_str()),
         },
+        Command::Migration { command } => migration::handle_command(command),
         Command::View { command } => view::handle_command(command),
         Command::Controller { command } => controller::handle_command(command),
         Command::Dir => {

@@ -28,11 +28,18 @@ pub fn get_app_dir() -> anyhow::Result<PathBuf> {
     })
 }
 
-pub fn normalize_dir(command: &str) -> anyhow::Result<Command> {
+pub fn normalize_root(command: &str) -> anyhow::Result<Command> {
     let app_dir = get_app_dir()?;
     let mut command = Command::new(command);
     command.current_dir(app_dir.to_str().unwrap());
 
+    Ok(command)
+}
+
+pub fn normalize_dir(dir: &str, command: &str) -> anyhow::Result<Command> {
+    let app_dir = get_app_dir()?;
+    let mut command = Command::new(command);
+    command.current_dir(app_dir.join(dir).to_str().unwrap());
     Ok(command)
 }
 
