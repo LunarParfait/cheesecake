@@ -60,11 +60,11 @@ pub enum Command {
     //     #[command(subcommand)]
     //     command: ViewCommand,
     // },
-    // /// Controller related commands
-    // Controller {
-    //     #[command(subcommand)]
-    //     command: ControllerCommand,
-    // },
+    /// Controller related commands
+    Controller {
+        #[command(subcommand)]
+        command: ControllerCommand,
+    },
 
     /// Gets current app directory
     Dir,
@@ -96,6 +96,7 @@ fn main() -> anyhow::Result<()> {
             RunCommand::Release => run_release(),
             RunCommand::Task { name } => run_task(name.as_str()),
         },
+        Command::Controller { command } => controller::handle_command(command),
         Command::Dir => {
             println!("{}", get_app_dir()?.to_str().unwrap());
             Ok(())
