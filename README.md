@@ -9,7 +9,7 @@ to ruby on rails and laravel.
 
 This repository contains the CLI tool used to create and manage the
 applications, the presets area located at
-[cheescake-presets](https://github.com/LunarParfait/cheesecake-presets).
+[cheescake-base](https://github.com/LunarParfait/cheesecake-base).
 
 ## Dependencies
 - Make (to install CLI tool)
@@ -34,9 +34,11 @@ applications, the presets area located at
 - [x] run tasks
 - [ ] migration tasks
 - [ ] model generation tasks
-- [ ] controller generation tasks
-- [ ] middleware genreation tasks
-- [ ] view generation tasks
+- [x] controller generation tasks
+- [ ] middleware generation tasks
+- [x] view generation tasks
+- [ ] change view/controller commands to accept path instead of name
+- [ ] move base cheesecake config to a separate crate
 
 ### General
 - [ ] add Dockerfile
@@ -44,8 +46,8 @@ applications, the presets area located at
 - [ ] add user storage solution
 - [ ] add non SQLite support
 - [ ] add webpack build system
-- [ ] add starter kits
 - [ ] add builtin caching solutions
 - [ ] add i18n support
 - [ ] add security solutions
 - [ ] add more presets
+- [ ] maybe add toml/yaml based configuration?
