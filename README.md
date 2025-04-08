@@ -8,7 +8,7 @@ for building fullstack backend focused web applications in Rust. Something simil
 to ruby on rails and laravel.
 
 This repository contains the CLI tool used to create and manage the
-applications, the presets area located at
+applications, the base preset is located at
 [cheescake-base](https://github.com/LunarParfait/cheesecake-base).
 
 ## Dependencies
