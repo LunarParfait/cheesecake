@@ -55,11 +55,11 @@ pub enum Command {
     //     #[command(subcommand)]
     //     command: ModelCommand,
     // },
-    // /// View related commands
-    // View {
-    //     #[command(subcommand)]
-    //     command: ViewCommand,
-    // },
+    /// View related commands
+    View {
+        #[command(subcommand)]
+        command: ViewCommand,
+    },
     /// Controller related commands
     Controller {
         #[command(subcommand)]
@@ -96,6 +96,7 @@ fn main() -> anyhow::Result<()> {
             RunCommand::Release => run_release(),
             RunCommand::Task { name } => run_task(name.as_str()),
         },
+        Command::View { command } => view::handle_command(command),
         Command::Controller { command } => controller::handle_command(command),
         Command::Dir => {
             println!("{}", get_app_dir()?.to_str().unwrap());
