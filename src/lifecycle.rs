@@ -85,6 +85,7 @@ pub fn build_app() -> anyhow::Result<()> {
     let mut html_opts = Cfg::new();
     html_opts.minify_js = true;
     html_opts.minify_css = true;
+    html_opts.preserve_brace_template_syntax = true;
 
     let spinner = ProgressBar::new_spinner();
     spinner.set_message("Minifying js/css and copying static assets...");
